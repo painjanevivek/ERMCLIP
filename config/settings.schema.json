@@ -1,0 +1,547 @@
+{
+  "$defs": {
+    "Captions": {
+      "additionalProperties": false,
+      "properties": {
+        "burn": {
+          "default": true,
+          "title": "Burn",
+          "type": "boolean"
+        },
+        "srt": {
+          "default": true,
+          "title": "Srt",
+          "type": "boolean"
+        },
+        "preset": {
+          "default": "highlight",
+          "enum": [
+            "highlight",
+            "plain",
+            "pop",
+            "momentum",
+            "click_bait",
+            "highlighter",
+            "studio_style",
+            "forest_notes",
+            "retro_serif",
+            "bold_pop",
+            "cherry_glow",
+            "pen_pal",
+            "big_ideas",
+            "blockout",
+            "editorial",
+            "bold_lime",
+            "newsroom",
+            "solar_sign",
+            "refined",
+            "popcorn",
+            "eye_candy",
+            "zine_scene",
+            "digital_highlights",
+            "solid_stamp",
+            "cinema_chic",
+            "chunky_cartoon",
+            "front_page",
+            "short_yellow"
+          ],
+          "title": "Preset",
+          "type": "string"
+        },
+        "font": {
+          "default": "Arial",
+          "title": "Font",
+          "type": "string"
+        },
+        "size": {
+          "default": 52,
+          "maximum": 180,
+          "minimum": 12,
+          "title": "Size",
+          "type": "integer"
+        },
+        "color": {
+          "default": "FFFFFF",
+          "title": "Color",
+          "type": "string"
+        },
+        "highlight": {
+          "default": "00D7FF",
+          "title": "Highlight",
+          "type": "string"
+        },
+        "max_chars": {
+          "default": 36,
+          "maximum": 100,
+          "minimum": 12,
+          "title": "Max Chars",
+          "type": "integer"
+        },
+        "position": {
+          "default": "bottom",
+          "enum": [
+            "bottom",
+            "top",
+            "middle"
+          ],
+          "title": "Position",
+          "type": "string"
+        }
+      },
+      "title": "Captions",
+      "type": "object"
+    },
+    "Duration": {
+      "additionalProperties": false,
+      "properties": {
+        "target": {
+          "default": 60,
+          "title": "Target",
+          "type": "number"
+        },
+        "minimum": {
+          "default": 15,
+          "title": "Minimum",
+          "type": "number"
+        },
+        "maximum": {
+          "default": 90,
+          "title": "Maximum",
+          "type": "number"
+        },
+        "strict": {
+          "default": false,
+          "title": "Strict",
+          "type": "boolean"
+        }
+      },
+      "title": "Duration",
+      "type": "object"
+    },
+    "Layout": {
+      "additionalProperties": false,
+      "properties": {
+        "preset": {
+          "default": "plain",
+          "enum": [
+            "plain",
+            "reference_window",
+            "podcast_hero"
+          ],
+          "title": "Preset",
+          "type": "string"
+        },
+        "headline": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Headline"
+        },
+        "highlight": {
+          "anyOf": [
+            {
+              "maxLength": 40,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Highlight"
+        },
+        "credit": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Credit"
+        },
+        "auto_highlight": {
+          "default": false,
+          "title": "Auto Highlight",
+          "type": "boolean"
+        }
+      },
+      "title": "Layout",
+      "type": "object"
+    },
+    "Profile": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "default": "shorts_9x16",
+          "title": "Name",
+          "type": "string"
+        },
+        "ratio": {
+          "default": "9:16",
+          "title": "Ratio",
+          "type": "string"
+        },
+        "width": {
+          "default": 1080,
+          "maximum": 7680,
+          "minimum": 64,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "default": 1920,
+          "maximum": 7680,
+          "minimum": 64,
+          "title": "Height",
+          "type": "integer"
+        },
+        "duration": {
+          "$ref": "#/$defs/Duration"
+        },
+        "count": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Count"
+        },
+        "total_duration": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "maximum": 90000,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Total Duration"
+        },
+        "strategy": {
+          "default": "continuous",
+          "enum": [
+            "continuous",
+            "compilation"
+          ],
+          "title": "Strategy",
+          "type": "string"
+        },
+        "framing": {
+          "default": "smart",
+          "enum": [
+            "smart",
+            "center",
+            "pad",
+            "blur",
+            "original",
+            "speaker"
+          ],
+          "title": "Framing",
+          "type": "string"
+        },
+        "captions": {
+          "$ref": "#/$defs/Captions"
+        },
+        "layout": {
+          "$ref": "#/$defs/Layout"
+        },
+        "inherit_podcast_style": {
+          "default": true,
+          "title": "Inherit Podcast Style",
+          "type": "boolean"
+        },
+        "normalize_audio": {
+          "default": true,
+          "title": "Normalize Audio",
+          "type": "boolean"
+        },
+        "fades": {
+          "default": true,
+          "title": "Fades",
+          "type": "boolean"
+        },
+        "trim_silence": {
+          "default": false,
+          "title": "Trim Silence",
+          "type": "boolean"
+        }
+      },
+      "title": "Profile",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "root": {
+      "default": "D:\\Work\\Project\\Dev\\ERMCLIP",
+      "title": "Root",
+      "type": "string"
+    },
+    "allowed_inputs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Inputs",
+      "type": "array"
+    },
+    "podcast_sources": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 512,
+      "title": "Podcast Sources",
+      "type": "array"
+    },
+    "watch_folders": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Watch Folders",
+      "type": "array"
+    },
+    "stable_seconds": {
+      "default": 10,
+      "maximum": 600,
+      "minimum": 0,
+      "title": "Stable Seconds",
+      "type": "number"
+    },
+    "poll_seconds": {
+      "default": 5,
+      "maximum": 3600,
+      "minimum": 0.1,
+      "title": "Poll Seconds",
+      "type": "number"
+    },
+    "retries": {
+      "default": 2,
+      "maximum": 5,
+      "minimum": 0,
+      "title": "Retries",
+      "type": "integer"
+    },
+    "revisions": {
+      "default": 2,
+      "maximum": 2,
+      "minimum": 0,
+      "title": "Revisions",
+      "type": "integer"
+    },
+    "process_timeout": {
+      "default": 7200,
+      "maximum": 86400,
+      "minimum": 10,
+      "title": "Process Timeout",
+      "type": "integer"
+    },
+    "min_free_gb": {
+      "default": 2,
+      "minimum": 0,
+      "title": "Min Free Gb",
+      "type": "number"
+    },
+    "min_gpu_free_mb": {
+      "default": 2000,
+      "minimum": 0,
+      "title": "Min Gpu Free Mb",
+      "type": "integer"
+    },
+    "encoder": {
+      "default": "auto",
+      "enum": [
+        "auto",
+        "cpu",
+        "nvenc"
+      ],
+      "title": "Encoder",
+      "type": "string"
+    },
+    "whisper_model": {
+      "default": "base",
+      "title": "Whisper Model",
+      "type": "string"
+    },
+    "whisper_device": {
+      "default": "auto",
+      "enum": [
+        "auto",
+        "cpu",
+        "cuda"
+      ],
+      "title": "Whisper Device",
+      "type": "string"
+    },
+    "allow_model_download": {
+      "default": false,
+      "title": "Allow Model Download",
+      "type": "boolean"
+    },
+    "scene_analysis": {
+      "default": true,
+      "title": "Scene Analysis",
+      "type": "boolean"
+    },
+    "semantic_model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Semantic Model"
+    },
+    "local_llm_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Local Llm Url"
+    },
+    "director_model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Director Model"
+    },
+    "critic_model": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Critic Model"
+    },
+    "managed_local_model": {
+      "default": false,
+      "title": "Managed Local Model",
+      "type": "boolean"
+    },
+    "local_context_tokens": {
+      "default": 32768,
+      "maximum": 65536,
+      "minimum": 16384,
+      "title": "Local Context Tokens",
+      "type": "integer"
+    },
+    "max_model_calls": {
+      "default": 8,
+      "maximum": 40,
+      "minimum": 0,
+      "title": "Max Model Calls",
+      "type": "integer"
+    },
+    "cache_days": {
+      "default": 30,
+      "maximum": 365,
+      "minimum": 1,
+      "title": "Cache Days",
+      "type": "integer"
+    },
+    "hermes_home": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Hermes Home"
+    },
+    "telegram_enabled": {
+      "default": false,
+      "title": "Telegram Enabled",
+      "type": "boolean"
+    },
+    "telegram_chat_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Telegram Chat Id"
+    },
+    "telegram_allowed_users": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Telegram Allowed Users",
+      "type": "array"
+    },
+    "telegram_send_media": {
+      "default": false,
+      "title": "Telegram Send Media",
+      "type": "boolean"
+    },
+    "defaults": {
+      "items": {
+        "$ref": "#/$defs/Profile"
+      },
+      "title": "Defaults",
+      "type": "array"
+    },
+    "podcast_layout": {
+      "$ref": "#/$defs/Layout"
+    },
+    "podcast_caption_preset": {
+      "default": "short_yellow",
+      "title": "Podcast Caption Preset",
+      "type": "string"
+    },
+    "additional_paid_api_budget": {
+      "default": 0,
+      "maximum": 0,
+      "minimum": 0,
+      "title": "Additional Paid Api Budget",
+      "type": "number"
+    }
+  },
+  "title": "Settings",
+  "type": "object"
+}

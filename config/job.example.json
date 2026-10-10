@@ -1,0 +1,7 @@
+{
+  "source":"C:/Videos/podcast.mp4",
+  "instruction":"Find NVIDIA, CUDA, or AMD discussions. Exclude cryptocurrency.",
+  "mode":"TARGETED",
+  "conditions":{"keywords":["NVIDIA","CUDA","AMD"],"all_keywords":false,"exclude":["cryptocurrency"]},
+  "profiles":[{"name":"nvidia_shorts","ratio":"9:16","width":1080,"height":1920,"duration":{"target":45,"minimum":30,"maximum":60,"strict":false},"count":8,"framing":"smart"}]
+}

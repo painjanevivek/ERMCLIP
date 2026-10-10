@@ -1,0 +1,5 @@
+[
+  {"name":"shorts_9x16","ratio":"9:16","width":1080,"height":1920,"duration":{"target":45,"minimum":30,"maximum":60,"strict":false},"count":10,"strategy":"continuous","framing":"smart"},
+  {"name":"landscape_16x9","ratio":"16:9","width":1920,"height":1080,"duration":{"target":300,"minimum":240,"maximum":300,"strict":false},"count":3,"strategy":"continuous","framing":"pad"},
+  {"name":"summary_16x9","ratio":"16:9","width":2560,"height":1440,"duration":{"target":720,"minimum":600,"maximum":720,"strict":false},"count":1,"strategy":"compilation","framing":"pad"}
+]

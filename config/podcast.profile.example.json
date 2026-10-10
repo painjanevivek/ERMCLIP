@@ -1,0 +1,12 @@
+{
+  "name": "podcast_shorts",
+  "ratio": "9:16",
+  "width": 1080,
+  "height": 1920,
+  "duration": {"target": 60, "minimum": 30, "maximum": 90, "strict": false},
+  "count": 5,
+  "strategy": "continuous",
+  "framing": "speaker",
+  "layout": {"preset": "podcast_hero", "auto_highlight": true, "credit": "Guest Name | EP 001"},
+  "captions": {"preset": "short_yellow", "max_chars": 24}
+}

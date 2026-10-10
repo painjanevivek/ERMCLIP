@@ -1,0 +1,450 @@
+{
+  "$defs": {
+    "Captions": {
+      "additionalProperties": false,
+      "properties": {
+        "burn": {
+          "default": true,
+          "title": "Burn",
+          "type": "boolean"
+        },
+        "srt": {
+          "default": true,
+          "title": "Srt",
+          "type": "boolean"
+        },
+        "preset": {
+          "default": "highlight",
+          "enum": [
+            "highlight",
+            "plain",
+            "pop",
+            "momentum",
+            "click_bait",
+            "highlighter",
+            "studio_style",
+            "forest_notes",
+            "retro_serif",
+            "bold_pop",
+            "cherry_glow",
+            "pen_pal",
+            "big_ideas",
+            "blockout",
+            "editorial",
+            "bold_lime",
+            "newsroom",
+            "solar_sign",
+            "refined",
+            "popcorn",
+            "eye_candy",
+            "zine_scene",
+            "digital_highlights",
+            "solid_stamp",
+            "cinema_chic",
+            "chunky_cartoon",
+            "front_page",
+            "short_yellow"
+          ],
+          "title": "Preset",
+          "type": "string"
+        },
+        "font": {
+          "default": "Arial",
+          "title": "Font",
+          "type": "string"
+        },
+        "size": {
+          "default": 52,
+          "maximum": 180,
+          "minimum": 12,
+          "title": "Size",
+          "type": "integer"
+        },
+        "color": {
+          "default": "FFFFFF",
+          "title": "Color",
+          "type": "string"
+        },
+        "highlight": {
+          "default": "00D7FF",
+          "title": "Highlight",
+          "type": "string"
+        },
+        "max_chars": {
+          "default": 36,
+          "maximum": 100,
+          "minimum": 12,
+          "title": "Max Chars",
+          "type": "integer"
+        },
+        "position": {
+          "default": "bottom",
+          "enum": [
+            "bottom",
+            "top",
+            "middle"
+          ],
+          "title": "Position",
+          "type": "string"
+        }
+      },
+      "title": "Captions",
+      "type": "object"
+    },
+    "Conditions": {
+      "additionalProperties": false,
+      "properties": {
+        "keywords": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 40,
+          "title": "Keywords",
+          "type": "array"
+        },
+        "all_keywords": {
+          "default": false,
+          "title": "All Keywords",
+          "type": "boolean"
+        },
+        "topics": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Topics",
+          "type": "array"
+        },
+        "exclude": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 40,
+          "title": "Exclude",
+          "type": "array"
+        },
+        "speaker": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Speaker"
+        },
+        "visual_events": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 20,
+          "title": "Visual Events",
+          "type": "array"
+        }
+      },
+      "title": "Conditions",
+      "type": "object"
+    },
+    "Duration": {
+      "additionalProperties": false,
+      "properties": {
+        "target": {
+          "default": 60,
+          "title": "Target",
+          "type": "number"
+        },
+        "minimum": {
+          "default": 15,
+          "title": "Minimum",
+          "type": "number"
+        },
+        "maximum": {
+          "default": 90,
+          "title": "Maximum",
+          "type": "number"
+        },
+        "strict": {
+          "default": false,
+          "title": "Strict",
+          "type": "boolean"
+        }
+      },
+      "title": "Duration",
+      "type": "object"
+    },
+    "Layout": {
+      "additionalProperties": false,
+      "properties": {
+        "preset": {
+          "default": "plain",
+          "enum": [
+            "plain",
+            "reference_window",
+            "podcast_hero"
+          ],
+          "title": "Preset",
+          "type": "string"
+        },
+        "headline": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Headline"
+        },
+        "highlight": {
+          "anyOf": [
+            {
+              "maxLength": 40,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Highlight"
+        },
+        "credit": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "minLength": 1,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Credit"
+        },
+        "auto_highlight": {
+          "default": false,
+          "title": "Auto Highlight",
+          "type": "boolean"
+        }
+      },
+      "title": "Layout",
+      "type": "object"
+    },
+    "Profile": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "default": "shorts_9x16",
+          "title": "Name",
+          "type": "string"
+        },
+        "ratio": {
+          "default": "9:16",
+          "title": "Ratio",
+          "type": "string"
+        },
+        "width": {
+          "default": 1080,
+          "maximum": 7680,
+          "minimum": 64,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "default": 1920,
+          "maximum": 7680,
+          "minimum": 64,
+          "title": "Height",
+          "type": "integer"
+        },
+        "duration": {
+          "$ref": "#/$defs/Duration"
+        },
+        "count": {
+          "anyOf": [
+            {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Count"
+        },
+        "total_duration": {
+          "anyOf": [
+            {
+              "exclusiveMinimum": 0,
+              "maximum": 90000,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Total Duration"
+        },
+        "strategy": {
+          "default": "continuous",
+          "enum": [
+            "continuous",
+            "compilation"
+          ],
+          "title": "Strategy",
+          "type": "string"
+        },
+        "framing": {
+          "default": "smart",
+          "enum": [
+            "smart",
+            "center",
+            "pad",
+            "blur",
+            "original",
+            "speaker"
+          ],
+          "title": "Framing",
+          "type": "string"
+        },
+        "captions": {
+          "$ref": "#/$defs/Captions"
+        },
+        "layout": {
+          "$ref": "#/$defs/Layout"
+        },
+        "inherit_podcast_style": {
+          "default": true,
+          "title": "Inherit Podcast Style",
+          "type": "boolean"
+        },
+        "normalize_audio": {
+          "default": true,
+          "title": "Normalize Audio",
+          "type": "boolean"
+        },
+        "fades": {
+          "default": true,
+          "title": "Fades",
+          "type": "boolean"
+        },
+        "trim_silence": {
+          "default": false,
+          "title": "Trim Silence",
+          "type": "boolean"
+        }
+      },
+      "title": "Profile",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "source": {
+      "title": "Source",
+      "type": "string"
+    },
+    "instruction": {
+      "default": "Create the best clips from this video.",
+      "maxLength": 10000,
+      "title": "Instruction",
+      "type": "string"
+    },
+    "mode": {
+      "default": "AUTO",
+      "enum": [
+        "AUTO",
+        "TARGETED"
+      ],
+      "title": "Mode",
+      "type": "string"
+    },
+    "conditions": {
+      "$ref": "#/$defs/Conditions"
+    },
+    "profiles": {
+      "items": {
+        "$ref": "#/$defs/Profile"
+      },
+      "maxItems": 12,
+      "minItems": 1,
+      "title": "Profiles",
+      "type": "array"
+    },
+    "transcript": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Transcript"
+    },
+    "transcript_language": {
+      "anyOf": [
+        {
+          "pattern": "^[a-z]{2,3}$",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Transcript Language"
+    },
+    "approved_plan": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Approved Plan"
+    },
+    "revision_of": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Revision Of"
+    },
+    "podcast_mode": {
+      "default": "auto",
+      "enum": [
+        "auto",
+        "on",
+        "off"
+      ],
+      "title": "Podcast Mode",
+      "type": "string"
+    }
+  },
+  "required": [
+    "source"
+  ],
+  "title": "JobSpec",
+  "type": "object"
+}

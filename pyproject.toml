@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ermclip"
+version = "0.1.0"
+description = "Local video editing worker with persistent jobs and Hermes integration"
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2.10,<3", "psutil>=6,<8", "faster-whisper>=1.1,<2", "opencv-python-headless>=4.10,<5", "PyYAML>=6,<7"]
+
+[project.optional-dependencies]
+cuda = ["nvidia-cublas-cu12>=12,<13", "nvidia-cudnn-cu12>=9,<10"]
+semantic = ["sentence-transformers>=3,<6"]
+speaker = ["torch==2.8.0", "python_speech_features==0.6", "scipy>=1.11,<2"]
+dev = ["pytest>=8,<10"]
+
+[project.scripts]
+ermclip = "ermclip.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"ermclip._light_asd" = ["LICENSE", "NOTICE.md"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+markers = ["integration: tests that run FFmpeg", "slow: long-duration render tests", "transcription: tests requiring downloaded Whisper weights"]

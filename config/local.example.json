@@ -1,0 +1,17 @@
+{
+  "whisper_model": "small",
+  "whisper_device": "auto",
+  "allow_model_download": false,
+  "encoder": "auto",
+  "local_llm_url": "http://127.0.0.1:8088/v1",
+  "director_model": "ermclip-qwen35-9b",
+  "critic_model": "ermclip-qwen35-9b",
+  "managed_local_model": true,
+  "local_context_tokens": 65536,
+  "max_model_calls": 40,
+  "podcast_layout": {"preset": "podcast_hero", "auto_highlight": true},
+  "podcast_caption_preset": "short_yellow",
+  "telegram_enabled": false,
+  "telegram_send_media": false,
+  "additional_paid_api_budget": 0
+}
