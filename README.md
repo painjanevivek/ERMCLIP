@@ -4,6 +4,8 @@
 
 ERMCLIP runs transcription, clip selection, rendering, and review on your computer. It uses faster-whisper for speech, a local language model for the AI Director and Critic, and FFmpeg for exports. Hermes can submit and control jobs through the included skill.
 
+The native Windows app guides you through five steps: import a video, choose shorts, set the look, check and start, then review exports. Double-click **ERMCLIP** on the desktop. It uses the installed WebView2 runtime and does not open Chrome. Every new session starts with no selected source. The app has no built-in reference episode.
+
 The application is a working local MVP. The documented GPU configuration was tested on an RTX 4060 Laptop GPU with 8 GB VRAM. It does not certify editorial accuracy or publish videos automatically. Review the final video and audio before publication.
 
 ## Contents
@@ -30,6 +32,7 @@ The application is a working local MVP. The documented GPU configuration was tes
 | Capability | Behavior |
 | --- | --- |
 | AUTO editing | Select excerpts from the source transcript. |
+| Desktop workspace | Choose local videos, customize output, save defaults, monitor jobs, and create revisions without terminal commands. |
 | TARGETED editing | Apply keywords, exclusions, and supported content conditions. |
 | Full-episode planning | Process eligible long requests in overlapping transcript sections, then rank valid source windows. |
 | Podcast defaults | Use the thumbnail-style `podcast_hero` layout, yellow speech captions, and speaker framing for eligible portrait profiles. |
@@ -249,6 +252,21 @@ Validate a manually edited plan again before submission. Automatic repairs adjus
 
 ## Worker operations
 
+For desktop access, install the free window package, build caption previews once, then install the tasks and shortcut:
+
+```powershell
+uv pip install --python .venv\Scripts\python.exe -e '.[desktop]'
+.\scripts\ermclip.ps1 caption-gallery
+.\scripts\install-startup.ps1
+.\scripts\install-desktop.ps1
+```
+
+Double-click **ERMCLIP** on the Windows desktop. One native desktop window opens. A second click brings that window forward. No terminal or browser window is required. WebView2 Runtime must be installed; the launcher reports an error if the desktop package or runtime is missing. The `ERMCLIP Local Pages` task starts only the small loopback service at sign-in. The worker, model, and legacy reference servers do not start at sign-in or on a shortcut click. All local servers bind to `127.0.0.1`. Port 8090 remains available for optional browser access. Existing reference media and exports stay on disk; legacy galleries require their separate manual launch commands.
+
+See [the workspace guide](docs/workspace.md). Output and engine settings save to private `config/local.json`. The worker reloads validated settings between jobs; active renders retain their original settings. New video selections permit only the selected file. The UI has no cloud model controls and cannot change model routes, credentials, or the zero paid API budget.
+
+Submitting a job starts the on-demand `ERMCLIP Local Worker` task. Saved pending work also resumes after a PC restart unless the queue is paused; an empty queue loads no model. The worker releases the managed model and exits after five minutes with no queued, running, or delayed retry jobs. Closing the window does not cancel an editing job. Paused pending jobs keep a running engine loaded until resumed or cancelled. Launcher status is in `state/local-pages.json`; errors are in `logs/desktop-launcher.log`. Run `install-desktop.ps1 -Remove` to remove the shortcut and page sign-in task. This does not remove the worker task or terminate running servers.
+
 Run these commands through `scripts/ermclip.ps1`:
 
 | Command | Action |
@@ -264,11 +282,11 @@ Run these commands through `scripts/ermclip.ps1`:
 
 ```powershell
 .\scripts\install-startup.ps1
-# Remove the sign-in task:
+# Remove the on-demand worker task:
 .\scripts\install-startup.ps1 -Remove
 ```
 
-The task starts after the current user signs in. Keep the PC on and awake. ERMCLIP does not change sleep settings. Finish downloads before submission.
+This installs an on-demand task with no logon trigger. The app starts it when needed. Direct CLI workers can use `worker --idle-exit 300` for the same release behavior, or omit that option to stay running for continuous folder monitoring. Keep the PC on and awake during editing. ERMCLIP does not change sleep settings. Finish downloads before submission.
 
 For backup, stop the worker and copy configuration, complete SQLite state including any WAL files, and required output packages. Keep private state out of Git. Do not delete a live lock file to start another worker. See [troubleshooting](docs/troubleshooting.md).
 
@@ -310,6 +328,8 @@ $env:PYTHONPATH = Join-Path $PWD 'src'
 ```
 
 The suite covers contracts, queue recovery, model boundaries, planning, revisions, captions, podcast defaults, speaker fallback, and rendering. Integration tests require FFmpeg. Some speaker tests require CPU Torch. Synthetic transcripts do not validate ASR. Inspect source paths before running the additional machine-specific validation scripts.
+
+The workspace API tests use isolated settings and SQLite queues. They check same-origin controls, request tokens, source permissions, byte-range video playback, and preserved source files. Worker tests also cover idle release and retention of delayed retries. For five-step UI checks with an installed local Chrome, install the `ui-test` extra and run `scripts/check-workspace-ui.py` while the workspace is running. Chrome is used only as a headless test engine. The script changes settings and creates jobs only in a separate test workspace; its export fixture does not claim an AI render. Run `scripts/check-native-desktop.py` with the normal app window closed to verify the actual WebView2 window and its empty start. Screenshots and reports stay under `output/workspace-checks/`. See [the desktop sequence](docs/desktop-sequence.md) and [measured resource evidence](docs/desktop-performance.md).
 
 Local full-episode validation produced five portrait shorts, checked exported caption words and timings, inspected actual frames, and verified the unchanged source fingerprint. Media and test artifacts remain local. Use [benchmark instructions](docs/benchmark.md) to record results on your hardware. `requirements.lock.txt` is a captured development environment snapshot; `pyproject.toml` defines supported installation dependencies.
 

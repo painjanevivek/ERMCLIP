@@ -61,3 +61,34 @@ def test_model_call_budget_survives_restart(settings):
     assert persisted==[1]
     restarted=LocalModel(settings,initial_calls=persisted[-1])
     with pytest.raises(RuntimeError): restarted.json("critic",{},{})
+
+
+def test_on_demand_worker_exits_and_releases_model_when_queue_is_empty(settings,monkeypatch):
+    import ermclip.local_runtime as runtime
+    settings.poll_seconds=.1
+    settings.local_llm_url='http://127.0.0.1:8088/v1'
+    settings.director_model='ermclip-qwen35-9b'
+    settings.critic_model='ermclip-qwen35-9b'
+    settings.managed_local_model=True
+    released=[]
+    monkeypatch.setattr(runtime,'stop',lambda s:released.append(s.path))
+    worker(settings,idle_exit=.02)
+    assert released==[settings.path]
+    health=json.loads((settings.path/'state/health.json').read_text())
+    assert health['status']=='stopped' and health['active_job'] is None
+
+
+def test_idle_timeout_keeps_delayed_retry_in_queue(settings,monkeypatch):
+    import ermclip.worker as module
+    store=Store(settings.path/'state/jobs.sqlite3')
+    job,_=store.submit(JobSpec(source='x.mp4'),'delayed')
+    store.update(job,status='retry',available=time.time()+3600)
+    settings.poll_seconds=.1
+    polls=[]
+    def poll(_):
+        polls.append(True)
+        if len(polls)==4:store.control('stop','1')
+    monkeypatch.setattr(module.Watcher,'poll',poll)
+    worker(settings,idle_exit=.01)
+    assert len(polls)==4
+    assert store.get(job)['status']=='retry'

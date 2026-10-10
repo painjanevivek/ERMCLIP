@@ -48,6 +48,7 @@ def parser():
     validation.add_argument("--plan",required=True)
     w=sub.add_parser("worker")
     w.add_argument("--once",action="store_true")
+    w.add_argument("--idle-exit",type=int,default=0,help="Stop and unload the managed model after this many idle seconds (0 keeps the worker running).")
     sub.add_parser("status").add_argument("job",nargs="?")
     for name in ("pause","resume","stop","health"):
         sub.add_parser(name)
@@ -153,7 +154,7 @@ def main(argv=None):
                 job,created=submit(spec,settings,store)
                 result.append({"job":job,"created":created})
         elif args.command=="worker":
-            worker(settings,args.once)
+            worker(settings,args.once,Path(args.config) if args.config else ROOT/'config/local.json',idle_exit=args.idle_exit)
         elif args.command in ("analyze","plan","validate-plan"):
             from .pipeline import analyse
             from .util import fingerprint,validate_input

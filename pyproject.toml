@@ -14,6 +14,8 @@ cuda = ["nvidia-cublas-cu12>=12,<13", "nvidia-cudnn-cu12>=9,<10"]
 semantic = ["sentence-transformers>=3,<6"]
 speaker = ["torch==2.8.0", "python_speech_features==0.6", "scipy>=1.11,<2"]
 dev = ["pytest>=8,<10"]
+ui-test = ["playwright>=1.55,<2"]
+desktop = ["pywebview>=6,<7; sys_platform == 'win32'"]
 
 [project.scripts]
 ermclip = "ermclip.cli:main"
@@ -23,6 +25,7 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 "ermclip._light_asd" = ["LICENSE", "NOTICE.md"]
+"ermclip" = ["web/*.html", "web/*.css", "web/*.js", "web/*.svg"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

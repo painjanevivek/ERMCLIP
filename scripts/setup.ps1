@@ -15,7 +15,7 @@ if (-not (Test-Path -LiteralPath '.venv\Scripts\python.exe')) {
     if ($LASTEXITCODE -ne 0) { throw 'Virtual environment creation failed.' }
 }
 $env:UV_CACHE_DIR = Join-Path $projectRoot 'cache\uv'
-uv pip install --python .venv\Scripts\python.exe -e '.[dev]'
+uv pip install --python .venv\Scripts\python.exe -e '.[dev,desktop]'
 if ($LASTEXITCODE -ne 0) { throw 'Dependency installation failed.' }
 & "$PSScriptRoot\ermclip.ps1" init
 if ($DownloadModels) {

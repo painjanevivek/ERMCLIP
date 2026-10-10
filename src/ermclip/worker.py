@@ -110,7 +110,17 @@ class JsonFormatter(logging.Formatter):
         return json.dumps({"time":time.time(),"level":record.levelname,"message":record.getMessage(),"error":self.formatException(record.exc_info) if record.exc_info else None},ensure_ascii=False)
 
 
-def worker(settings,once=False):
+def refresh_settings(settings, config_path):
+    """Reload validated settings only between jobs; the locked root stays fixed."""
+    from .config import Settings
+    refreshed = Settings.model_validate_json(Path(config_path).read_text(encoding='utf-8-sig'))
+    if refreshed.path != settings.path:
+        raise ValueError('The running worker root cannot change')
+    refreshed.prepare()
+    return refreshed
+
+
+def worker(settings,once=False,config_path=None,idle_exit=0):
     store=Store(settings.path/"state"/"jobs.sqlite3")
     handler=logging.FileHandler(settings.path/"logs"/"worker.jsonl",encoding="utf-8")
     handler.setFormatter(JsonFormatter())
@@ -121,11 +131,13 @@ def worker(settings,once=False):
     for sig in (signal.SIGINT,signal.SIGTERM):
         signal.signal(sig,request_stop)
     health=settings.path/"state"/"health.json"
+    config_stamp = None
     with worker_lock(settings.path/"state"/"worker.lock"):
         store.recover()
         store.control("stop","0")
         watcher=Watcher(settings,store)
         active=None
+        idle_since=time.monotonic()
         def stopping():
             return stop[0] or store.control("stop")=="1"
         def heartbeat():
@@ -141,12 +153,22 @@ def worker(settings,once=False):
         try:
             while not stopping():
                 heartbeat()
+                if config_path and Path(config_path).is_file():
+                    stamp = Path(config_path).stat().st_mtime_ns
+                    if stamp != config_stamp:
+                        try:
+                            settings = refresh_settings(settings, config_path)
+                            watcher.settings = settings
+                        except (OSError, ValueError):
+                            logging.exception('settings_reload_failed')
+                        config_stamp = stamp
                 try:
                     watcher.poll()
                 except (OSError,ValueError):
                     logging.exception("watcher_failed")
                 job=store.claim()
                 if job:
+                    idle_since=time.monotonic()
                     active=job["id"]
                     store.event(active,"started",{"attempt":job["attempts"]})
                     try:
@@ -166,6 +188,15 @@ def worker(settings,once=False):
                         store.event(active,"retry" if retry else "error",{"error":str(exc)[-1200:],"attempt":job["attempts"]})
                     finally:
                         active=None
+                        idle_since=time.monotonic()
+                if idle_exit and not active:
+                    # Keep delayed retries and paused jobs. No pending work is abandoned.
+                    with store.connect() as db:
+                        pending=db.execute("SELECT COUNT(*) FROM jobs WHERE status IN ('queued','retry','running')").fetchone()[0]
+                    if pending:
+                        idle_since=time.monotonic()
+                    elif time.monotonic()-idle_since >= idle_exit:
+                        break
                 flush(settings,store)
                 if once:
                     break
@@ -176,3 +207,6 @@ def worker(settings,once=False):
             atomic_json(health,{"pid":os.getpid(),"time":time.time(),"active_job":None,"status":"stopped"})
             logging.getLogger().removeHandler(handler)
             handler.close()
+            if idle_exit and settings.managed_local_model:
+                from .local_runtime import stop as stop_model
+                stop_model(settings)
